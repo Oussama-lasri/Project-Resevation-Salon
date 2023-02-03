@@ -42,7 +42,7 @@ class Appointment {
     }
 
 
-    public function readSingleAppintment(){
+    public function readSingleAppiontment(){
         $query = 'SELECT 
         ap.id_appointment ,
         ap.date_reservation,
@@ -53,14 +53,19 @@ class Appointment {
         WHERE ap.id_appointment = :id
         LIMIT 0,1 ';
         $stmt = $this->conn->prepare($query);
+
         $stmt->bindParam(':id', $this->id_appointment);
+
         $stmt->execute();
+
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->id_appointment = $row['id_appointment'];
         $this->date_reservation = $row['date_reservation'];
         $this->heure_reservation = $row['heure_reservation'];
-        $this->first_name_client = $row['first_name_client'];
-        $this->last_name_client = $row['last_name_client'];
+        $this->first_name_client = $row['first_name'];
+        $this->last_name_client = $row['last_name'];
+
+    //    echo $this->id_appointment;
     }
 
 
@@ -69,16 +74,29 @@ class Appointment {
         $query = 'UPDATE ' . $this->table . ' SET date_reservation = :date_reservation ,
         heure_reservation = :heure_reservation
         WHERE
-        id_client = :id_client ';
+        id_appointment = :id_appointment  ';
+
+
+
+
         $stmt = $this->conn->prepare($query);
+
+
+        // clean data
+        // $this->date_reservation = htmlspecialchars(strip_tags($this->date_reservation));
+        // $this->heure_reservation = htmlspecialchars(strip_tags($this->heure_reservation));
+
+
+        // die($this->date_reservation);
+
         $stmt->bindParam(':date_reservation',$this->date_reservation);
         $stmt->bindParam(':heure_reservation',$this->heure_reservation);
-        $stmt->bindParam(':id_client',$this->id_client);
+        $stmt->bindParam(':id_appointment',$this->id_appointment);
 
         if($stmt->execute()){
             return true;
         }else{
             return false;
         }
-    }
+}
 }
