@@ -4,6 +4,8 @@ class Appointment {
     public $date_reservation;
     public $heure_reservation;
     public $id_client;
+    public $first_name_client;
+    public $last_name_client;
 
     private $table = 'appointment';
     private $conn;
@@ -57,7 +59,8 @@ class Appointment {
         $this->id_appointment = $row['id_appointment'];
         $this->date_reservation = $row['date_reservation'];
         $this->heure_reservation = $row['heure_reservation'];
-        $this->id_appointment = $row['id_appointment'];
+        $this->first_name_client = $row['first_name_client'];
+        $this->last_name_client = $row['last_name_client'];
     }
 
 
