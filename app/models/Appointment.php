@@ -1,5 +1,6 @@
-<?php 
-class Appointment {
+<?php
+class Appointment
+{
     public $id_appointment;
     public $date_reservation;
     public $heure_reservation;
@@ -10,30 +11,33 @@ class Appointment {
     private $table = 'appointment';
     private $conn;
 
-    public function __construct(){
+    public function __construct()
+    {
         $database = new Database();
         $this->conn = $database->connect();
     }
 
-    public function addappointment(){
+    public function addappointment()
+    {
         $query = 'INSERT INTO ' . $this->table . ' SET date_reservation = :date_reservation ,
                                                     heure_reservation = :heure_reservation,
                                                     id_client = :id_client
                                                     ';
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':date_reservation',$this->date_reservation);
-        $stmt->bindParam(':heure_reservation',$this->heure_reservation);
-        $stmt->bindParam(':id_client',$this->id_client);
+        $stmt->bindParam(':date_reservation', $this->date_reservation);
+        $stmt->bindParam(':heure_reservation', $this->heure_reservation);
+        $stmt->bindParam(':id_client', $this->id_client);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             return true;
-        }else{
+        } else {
             return false;
-        }                                      
+        }
     }
 
-    public function readAppointments(){
-        $query ='SELECT * FROM ' .$this->table ;
+    public function readAppointments()
+    {
+        $query = 'SELECT * FROM ' . $this->table;
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         // $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -42,7 +46,8 @@ class Appointment {
     }
 
 
-    public function readSingleAppiontment(){
+    public function readSingleAppiontment()
+    {
         $query = 'SELECT 
         ap.id_appointment ,
         ap.date_reservation,
@@ -65,12 +70,13 @@ class Appointment {
         $this->first_name_client = $row['first_name'];
         $this->last_name_client = $row['last_name'];
 
-    //    echo $this->id_appointment;
+        //    echo $this->id_appointment;
     }
 
 
 
-    public function updateAppointment(){
+    public function updateAppointment()
+    {
         $query = 'UPDATE ' . $this->table . ' SET date_reservation = :date_reservation ,
         heure_reservation = :heure_reservation
         WHERE
@@ -89,14 +95,25 @@ class Appointment {
 
         // die($this->date_reservation);
 
-        $stmt->bindParam(':date_reservation',$this->date_reservation);
-        $stmt->bindParam(':heure_reservation',$this->heure_reservation);
-        $stmt->bindParam(':id_appointment',$this->id_appointment);
+        $stmt->bindParam(':date_reservation', $this->date_reservation);
+        $stmt->bindParam(':heure_reservation', $this->heure_reservation);
+        $stmt->bindParam(':id_appointment', $this->id_appointment);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function deleteAppointment(){
+        $query = 'DELETE FROM ' . $this->table . ' WHERE id_appointment = :id_appointment';
+        $stmt = $this->conn->prepare($query);
+        $this->id_appointment = htmlspecialchars(strip_tags($this->id_appointment));
+        $stmt->bindParam(':id_appointment',$this->id_appointment);
+        if($stmt->execute()) {
             return true;
         }else{
             return false;
         }
-}
+    }
 }

@@ -71,7 +71,7 @@ class Appointments extends Controller
     public function updateAppointment($id){
 
         $this->modelAppointment->id_appointment = $id;
-        $this->modelAppointment->date_reservation = '21222-02-12';
+        $this->modelAppointment->date_reservation = '2222-02-12';
         $this->modelAppointment->heure_reservation = '10:00:00';
 
         if($this->modelAppointment->updateAppointment()){
@@ -85,7 +85,9 @@ class Appointments extends Controller
         }
     }
 
-    public function deleteAppointment(){
-
+    public function deleteAppointment($id){
+        $this->modelAppointment->id_appointment = $id;
+        
+        
     }
 }
