@@ -13,7 +13,6 @@ class Appointments extends Controller
     {
 
         $data = json_decode(file_get_contents('php://input'));
-
         $this->modelAppointment->date_reservation = $data->date_reservation;
         $this->modelAppointment->heure_reservation = $data->heure_reservation;
         $this->modelAppointment->id_client = $data->id_client;
@@ -42,25 +41,23 @@ class Appointments extends Controller
                 $item = array(
                     'id_appointment' => $id_appointment,
                     'date_reservation' => $date_reservation,
-                    'heure_reservation' => $date_reservation,
-                    'id_client' => $date_reservation,
+                    'heure_reservation' => $heure_reservation,
+                    'id_client' => $id_client,
                 );
                 array_push($appointments['appointment'], $item);
             }
-
             echo json_encode($appointments);
-           
-        }else{
+        } else {
             echo json_encode(
                 array('message' => 'NOT FOUND')
             );
         }
     }
 
-    public function readSingleAppointment($id){
+    public function readSingleAppointment($id)
+    {
         $this->modelAppointment->id_appointment = $id;
         $this->modelAppointment->readSingleAppiontment();
-
         $Appointment = array(
             'id_appointment' => $this->modelAppointment->id_appointment,
             'date_reservation' => $this->modelAppointment->date_reservation,
@@ -71,37 +68,51 @@ class Appointments extends Controller
         print_r(json_encode($Appointment));
     }
 
-    public function updateAppointment($id){
+    public function updateAppointment($id)
+    {
 
         $data = json_decode(file_get_contents('php://input'));
-
-
         $this->modelAppointment->date_reservation = $data->date_reservation;
         $this->modelAppointment->heure_reservation = $data->heure_reservation;
         // $this->modelAppointment->id_client = $data->id_client;
 
-        if($this->modelAppointment->updateAppointment()){
+        if ($this->modelAppointment->updateAppointment()) {
             echo json_encode(
                 array('message' => 'appointment updated')
             );
-        }else{
+        } else {
             echo json_encode(
                 array('message' => 'Error')
             );
         }
     }
 
-    public function deleteAppointment($id){
-        $this->modelAppointment->id_appointment = $id;
-        if($this->modelAppointment->deleteAppointment()){
+    public function deleteAppointment()
+    {
+        $data = json_decode(file_get_contents('php://input'));
+        $this->modelAppointment->id_client =  $data->client_id;
+        $this->modelAppointment->date_reservation = $data->date_reservation;
+        $this->modelAppointment->heure_reservation = $data->heure_reservation;
+        if ($this->modelAppointment->deleteAppointment()) {
             echo json_encode(
-                array('message' => 'appointment deleted')
+                array('message' => 'appointment deleted',)
             );
-        }else{
+        } else {
             echo json_encode(
                 array('message' => 'Error')
             );
         }
-        
+    }
+
+    public function checkByDate($date)
+    {
+        $this->modelAppointment->date_reservation = $date;
+        $results = $this->modelAppointment->checkDate();
+        echo json_encode($results);
+    }
+    public function userAppointement($id){
+        $this->modelAppointment->id_client = $id;
+        $results=$this->modelAppointment->userAppointement();
+        echo json_encode($results);
     }
 }

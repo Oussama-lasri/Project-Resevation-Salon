@@ -30,12 +30,37 @@ class User
         $stmt->bindParam(':phone', $this->phone);
         $stmt->bindParam(':token', $this->token);
         if ($stmt->execute()) {
-            return true;
+            $lastInsertId = $this->conn->lastInsertId();
+            $selectQuery = 'SELECT * FROM ' . $this->table . ' WHERE id_user = :id';
+            $selectStmt = $this->conn->prepare($selectQuery);
+            $selectStmt->bindParam(':id', $lastInsertId);
+            $selectStmt->execute();
+            $row = $selectStmt->fetch(PDO::FETCH_ASSOC);
+            return $row;
         } else {
             return false;
         }
+
+
     }
-    // public function User(){
-    //     $query = 'SELECT '
+
+    public function checkToken(){
+        $query = 'SELECT * FROM '.$this->table.' WHERE token = :token ';
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':token', $this->token);
+        if($stmt->execute()){
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }else{
+            return false;
+        }
+    }
+    // public function lastInsertId(){
+    //     $lastInsertId = $this->conn->lastInsertId();
+    //         $selectQuery = 'SELECT * FROM ' . $this->table . ' WHERE id_user = :id';
+    //         $selectStmt = $this->conn->prepare($selectQuery);
+    //         $selectStmt->bindParam(':id', $lastInsertId);
+    //         $selectStmt->execute();
+    //         $row = $selectStmt->fetch(PDO::FETCH_ASSOC);
+    //         return $row;
     // }
 }

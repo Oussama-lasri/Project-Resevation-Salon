@@ -40,8 +40,6 @@ class Appointment
         $query = 'SELECT * FROM ' . $this->table;
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
-        // $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // die(var_dump($stmt));    
         return $stmt;
     }
 
@@ -80,11 +78,7 @@ class Appointment
         $query = 'UPDATE ' . $this->table . ' SET date_reservation = :date_reservation ,
         heure_reservation = :heure_reservation
         WHERE
-        id_appointment = :id_appointment  ';
-
-
-
-
+        id_appointment = :id_appointment';
         $stmt = $this->conn->prepare($query);
 
 
@@ -105,15 +99,40 @@ class Appointment
             return false;
         }
     }
-    public function deleteAppointment(){
-        $query = 'DELETE FROM ' . $this->table . ' WHERE id_appointment = :id_appointment';
+    public function deleteAppointment()
+    {
+        $query = 'DELETE FROM ' . $this->table . ' WHERE id_client = :id_client and date_reservation = :date_reservation and heure_reservation = :heure_reservation';
         $stmt = $this->conn->prepare($query);
-        $this->id_appointment = htmlspecialchars(strip_tags($this->id_appointment));
-        $stmt->bindParam(':id_appointment',$this->id_appointment);
-        if($stmt->execute()) {
+        $this->id_client = htmlspecialchars(strip_tags($this->id_client));
+        $this->date_reservation = htmlspecialchars(strip_tags($this->date_reservation));
+        $this->heure_reservation = htmlspecialchars(strip_tags($this->heure_reservation));
+        $stmt->bindParam(':id_client', $this->id_client);
+        $stmt->bindParam(':date_reservation', $this->date_reservation);
+        $stmt->bindParam(':heure_reservation', $this->heure_reservation);
+        if ($stmt->execute()) {
             return true;
-        }else{
+        } else {
             return false;
         }
+    }
+
+    public function checkDate()
+    {
+        $query = 'SELECT * from ' . $this->table . ' WHERE date_reservation = :date_reservation';
+        $stmt = $this->conn->prepare($query);
+        $this->date_reservation = htmlspecialchars(strip_tags($this->date_reservation));
+        $stmt->bindParam(':date_reservation', $this->date_reservation);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        return $result;
+    }
+
+    public function userAppointement(){
+        $query = 'SELECT * FROM ' .$this->table.' WHERE id_client = :id';
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id',$this->id_client);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+        return $results; 
     }
 }
