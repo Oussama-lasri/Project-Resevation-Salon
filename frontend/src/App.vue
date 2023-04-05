@@ -1,12 +1,35 @@
-<script setup>
-import home from './pages/home.vue';
-</script>
+
 
 <template>
-<home></home>
+    <navbar />
+    <router-view />
+
 </template>
+<style></style>
+<script>
 
-<style>
+
+import navbar from './Components/navbar.vue'
+
+export default {
+    name: 'App',
+    data() {
+        return {
+
+        }
+
+    },
+    mounted() {
+
+    },
+    components: {
+        navbar,
+        
+    },
+    
 
 
-</style>
+
+}
+
+</script>
